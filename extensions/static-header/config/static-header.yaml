@@ -13,7 +13,7 @@ spec:
       patch:
         operation: INSERT_BEFORE
         value:
-          name: nop-filter-config
+          name: test-filter-config
           config_discovery:
             config_source:
               ads: {}
@@ -36,7 +36,7 @@ spec:
       patch:
         operation: ADD
         value:
-          name: nop-filter-config
+          name: test-filter-config
           typed_config:
             "@type": type.googleapis.com/udpa.type.v1.TypedStruct
             type_url: type.googleapis.com/envoy.extensions.filters.http.wasm.v3.Wasm
@@ -47,5 +47,5 @@ spec:
                   code:
                     remote:
                       http_uri:
-                        uri: "https://www.agilicus.com/www/downloads/envoy-wasm-modules/nop/v0.1.0/nop.wasm"
-                      sha256: "3292eed71c6628990637874dcd9c018b3270be2db072e7e10cdaeec4435a176d"
+                        uri: "https://www.agilicus.com/www/downloads/envoy-wasm-modules/static-header/v0.2.0/static-header.wasm"
+                      sha256: "6f4e266254d4dddf5af4903ed32e78851b6c1429b3ff02695962dcb789d922fd"

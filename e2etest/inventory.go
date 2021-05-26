@@ -10,6 +10,7 @@ func init() {
 	ExtensionE2ETests = &env.TestInventory{
 		Tests: []string{
 			"Nop/TestDoNothing",
+			"StaticHeader/AddHeader",
 		},
 	}
 }

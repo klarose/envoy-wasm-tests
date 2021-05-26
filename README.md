@@ -11,6 +11,7 @@ These extensions are mostly used for testing/proving out issues/etc
 ## Extensions
 
 - nop: This extension does nothing. It just proves that you can compile and load it.
+- static-header: This extends adds a single header.
 
 ## Development
 
