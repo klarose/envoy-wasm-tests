@@ -12,13 +12,15 @@ class NopRootContext : public RootContext {
       : RootContext(id, root_id) {}
 
   bool onConfigure(size_t) override;
+
  private:
 };
 
 class NopContext : public Context {
  public:
-  explicit NopContext(uint32_t id, RootContext* root)
-      : Context(id, root) {}
+  explicit NopContext(uint32_t id, RootContext* root) : Context(id, root) {}
+
+  FilterHeadersStatus onResponseHeaders(uint32_t, bool) override;
 
  private:
   inline NopRootContext* rootContext() {
