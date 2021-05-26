@@ -1,0 +1,50 @@
+apiVersion: networking.istio.io/v1alpha3
+kind: EnvoyFilter
+metadata:
+  name: nop-filter
+  namespace: istio-system
+spec:
+  configPatches:
+    - applyTo: HTTP_FILTER
+      match:
+        context: GATEWAY
+        listener:
+          portNumber: 8443
+      patch:
+        operation: INSERT_BEFORE
+        value:
+          name: nop-filter-config
+          config_discovery:
+            config_source:
+              ads: {}
+              initial_fetch_timeout: 0s
+            type_urls: [ "type.googleapis.com/envoy.extensions.filters.http.wasm.v3.Wasm"]
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: EnvoyFilter
+metadata:
+  name: nop-filter-config
+  namespace: istio-system
+spec:
+  configPatches:
+    - applyTo: EXTENSION_CONFIG
+      match:
+        context: GATEWAY
+        listener:
+          portNumber: 8443
+      patch:
+        operation: ADD
+        value:
+          name: nop-filter-config
+          typed_config:
+            '@type': type.googleapis.com/udpa.type.v1.TypedStruct
+            type_url: type.googleapis.com/envoy.extensions.filters.http.wasm.v3.Wasm
+            value:
+              config:
+                vm_config:
+                  runtime: envoy.wasm.runtime.v8
+                  code:
+                    remote:
+                      http_uri:
+                        uri: "" # FILLMEINPLEASE
+                      sha256: a92d62c0607f33c51e94e53939b0d3d227f0fc14329fa468a188206f452e360e
