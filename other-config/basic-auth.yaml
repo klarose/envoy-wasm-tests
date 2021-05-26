@@ -1,0 +1,56 @@
+---
+# This filter configures istio to fetch from the configuration presented
+# below. This works around a few problems with the envoy fetch mechanisms,
+# as detailed here: https://github.com/istio/istio/issues/29989
+# See also https://istio.io/latest/docs/ops/configuration/extensibility/wasm-module-distribution/
+apiVersion: networking.istio.io/v1alpha3
+kind: EnvoyFilter
+metadata:
+  name: test-filter
+  namespace: istio-system
+spec:
+  configPatches:
+    - applyTo: HTTP_FILTER
+      match:
+        context: GATEWAY
+        listener:
+          portNumber: 8443
+      patch:
+        operation: INSERT_BEFORE
+        value:
+          name: test-filter-config
+          config_discovery:
+            config_source:
+              ads: {}
+              initial_fetch_timeout: 0s
+            type_urls: ["type.googleapis.com/envoy.extensions.filters.http.wasm.v3.Wasm"]
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: EnvoyFilter
+metadata:
+  name: test-filter-config
+  namespace: istio-system
+spec:
+  configPatches:
+    - applyTo: EXTENSION_CONFIG
+      match:
+        context: GATEWAY
+        listener:
+          portNumber: 8443
+      patch:
+        operation: ADD
+        value:
+          name: test-filter-config
+          typed_config:
+            '@type': type.googleapis.com/udpa.type.v1.TypedStruct
+            type_url: type.googleapis.com/envoy.extensions.filters.http.wasm.v3.Wasm
+            value:
+              config:
+                vm_config:
+                  runtime: envoy.wasm.runtime.v8
+                  code:
+                    remote:
+                      http_uri:
+                        # This corresponds to https://git.agilicus.com/pub/envoy-extensions
+                        # Source code is: https://git.agilicus.com/platform/envoy-extensions
+                        uri: https://github.com/istio-ecosystem/wasm-extensions/releases/download/1.9.2/basic-auth.wasm
