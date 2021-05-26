@@ -51,6 +51,4 @@ spec:
                   code:
                     remote:
                       http_uri:
-                        # This corresponds to https://git.agilicus.com/pub/envoy-extensions
-                        # Source code is: https://git.agilicus.com/platform/envoy-extensions
                         uri: https://github.com/istio-ecosystem/wasm-extensions/releases/download/1.9.2/basic-auth.wasm
